@@ -20,6 +20,23 @@ namespace AspNetIdentityProjesi.Controllers
         {
             var userStore = (new UserStore<ApplicationUser>(new IdentityDataContext()));
             userManager = new UserManager<ApplicationUser>(userStore);
+
+            //userManager.PasswordValidator = new PasswordValidator()
+            userManager.PasswordValidator = new CustomPasswordValidator()
+            {
+                RequireDigit = true, //En az 1 sayısal ifade olsun
+                RequiredLength = 7, //Minimum 7 karakter olsun
+                RequireLowercase = true, //mutlaka 1 tane küçük harf olsun
+                RequireUppercase = true,
+                RequireNonLetterOrDigit = true,//Mutlaka 1 tane alfanumerik değer olmak zorunda 
+            };
+
+            //Mail adresleri kişiye özel olması için.Tekrarlı mail adresi kullanmamak için.
+            userManager.UserValidator = new UserValidator<ApplicationUser>(userManager)
+            {
+                RequireUniqueEmail = true,
+                AllowOnlyAlphanumericUserNames = false //alfa numerik karakter olsun mu .
+            };
         }
 
 

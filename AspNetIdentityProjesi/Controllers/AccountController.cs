@@ -53,6 +53,11 @@ namespace AspNetIdentityProjesi.Controllers
         {
             //kullanıcının gitmek istediği sayfayı tutmak için olusturduk
             ViewBag.returnUrl = returnUrl;
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("Error", new string[] { "Erişim hakkınız yok" });
+            }
             return View();
         }
 
@@ -111,6 +116,7 @@ namespace AspNetIdentityProjesi.Controllers
 
             if (result.Succeeded)
             {
+                userManager.AddToRole(user.Id, "User");
                 return RedirectToAction("Login");
             }
             else
